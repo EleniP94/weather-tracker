@@ -1,7 +1,10 @@
 /** @format */
+'use client'
 
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 // https://api.openweathermap.org/data/2.5/forecast?q=pune&appid=8c3d0ece8109e255ddbf0235c3ecf18b&cnt=56
 
@@ -76,6 +79,27 @@ type Coordinates = {
 
 
 export default function Home() {
+  const { isPending, error, data } = useQuery<WeatherData>({
+    queryKey: ["repoData"], 
+    queryFn: async () => {
+      const { data } = await axios.get(
+        "https://api.openweathermap.org/data/2.5/forecast?q=pune&appid=8c3d0ece8109e255ddbf0235c3ecf18b&cnt=56"
+    );
+    }})
+  
+    return data;
+    
+    // queryFn: () =>
+      // fetch(
+      //   'https://api.openweathermap.org/data/2.5/forecast?q=pune&appid=8c3d0ece8109e255ddbf0235c3ecf18b&cnt=56'
+      // ).then((res) =>
+      //   res.json(),
+      // ),
+  
+  console.log('data', data)
+
+  if (isPending) return 'Loading...'
+
   return (
     <div className = "flex flex-col gap-4 bg-gray-100 min-h-screen">
       <Navbar />
