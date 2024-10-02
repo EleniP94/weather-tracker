@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
-import { useQuery } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 // https://api.openweathermap.org/data/2.5/forecast?q=pune&appid=8c3d0ece8109e255ddbf0235c3ecf18b&cnt=56
@@ -77,17 +77,20 @@ type Coordinates = {
   lon: number;          // Longitude
 };
 
+const queryClient = new QueryClient();
 
 export default function Home() {
   const { isPending, error, data } = useQuery<WeatherData>({
     queryKey: ["repoData"], 
     queryFn: async () => {
       const { data } = await axios.get(
-        "https://api.openweathermap.org/data/2.5/forecast?q=pune&appid=8c3d0ece8109e255ddbf0235c3ecf18b&cnt=56"
+        `https://api.openweathermap.org/data/2.5/forecast?q=pune&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}&cnt=56`
     );
+    return data;
+    
     }})
   
-    return data;
+   
     
     // queryFn: () =>
       // fetch(
@@ -96,7 +99,7 @@ export default function Home() {
       //   res.json(),
       // ),
   
-  console.log('data', data)
+  console.log("data", data);
 
   if (isPending) return 'Loading...'
 
