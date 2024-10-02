@@ -5,6 +5,7 @@ import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { format, parseISO } from "date-fns";
 
 // https://api.openweathermap.org/data/2.5/forecast?q=pune&appid=8c3d0ece8109e255ddbf0235c3ecf18b&cnt=56
 
@@ -77,7 +78,7 @@ type Coordinates = {
   lon: number;          // Longitude
 };
 
-const queryClient = new QueryClient();
+// const queryClient = new QueryClient();
 
 export default function Home() {
   const { isPending, error, data } = useQuery<WeatherData>({
@@ -87,25 +88,44 @@ export default function Home() {
         `https://api.openweathermap.org/data/2.5/forecast?q=pune&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}&cnt=56`
     );
     return data;
+
+    }});
     
-    }})
+    const firstData = data?.list[0];
   
    
-    
-    // queryFn: () =>
-      // fetch(
-      //   'https://api.openweathermap.org/data/2.5/forecast?q=pune&appid=8c3d0ece8109e255ddbf0235c3ecf18b&cnt=56'
-      // ).then((res) =>
-      //   res.json(),
-      // ),
-  
-  console.log("data", data);
+    console.log("data", data);
 
-  if (isPending) return 'Loading...'
+  if (isPending) 
+    return (
+  <div className = "flex items-center min-h-screen justify-center">
+    <p className = "animate-bounce"> Loading... </p>
+  </div>
+  );
 
   return (
     <div className = "flex flex-col gap-4 bg-gray-100 min-h-screen">
       <Navbar />
+      <main className = "px-3 max-w-7x1 mx-auto flex flex-col gap-9 w-full pb-10 pt-4">
+        {/* today data */}
+        <section>
+          <div>
+            <h2 className = "flex gap-1 text-2x1 items-end">
+              <p>
+                {format(parseISO(firstData?.dt_txt ?? ""), 'EEEE')}
+              </p>
+              <p className = "text-lg">
+                ({format(parseISO(firstData?.dt_txt ?? ""), "dd.MM.yyyy")})
+              </p>
+            </h2>
+            <div></div>
+          </div>
+
+
+        </section>
+        {/* 7 day forecast */}
+        <section></section>
+      </main>
     </div>
   );
 }
