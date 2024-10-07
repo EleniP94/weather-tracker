@@ -3,6 +3,7 @@
 
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
+import Container from "@/components/Container";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { format, parseISO } from "date-fns";
@@ -118,7 +119,11 @@ export default function Home() {
                 ({format(parseISO(firstData?.dt_txt ?? ""), "dd.MM.yyyy")})
               </p>
             </h2>
-            <div></div>
+            <div>
+            <Container className = "gap-10 px-6 items-center">
+              <div className = "flex flex-col px-4"></div>
+            </Container>
+            </div>
           </div>
 
 
