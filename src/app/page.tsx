@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-quer
 import axios from "axios";
 import { format, parseISO } from "date-fns";
 import { convertKelvinToCelsius } from "@/utils/convertKelvinToCelsius";
+import WeatherIcon from "@/components/WeatherIcon";
 
 // https://api.openweathermap.org/data/2.5/forecast?q=pune&appid=8c3d0ece8109e255ddbf0235c3ecf18b&cnt=56
 
@@ -121,6 +122,7 @@ export default function Home() {
               </p>
             </h2>
             <Container className = "gap-10 px-6 items-center">
+              {/* temperature */}
               <div className = "flex flex-col px-4">
                 <span className = "text-5xl">
                   {convertKelvinToCelsius(firstData?.main.temp ?? 296.37)}º
@@ -142,6 +144,23 @@ export default function Home() {
                     º↑
                   </span>
                 </p>
+              </div>
+              {/* time and weather icon */}
+              <div className = "flex gap-10 sm:gap-16 overflow-x-auto w-full justify-between pr-3">
+                {data?.list.map((d, i) => (
+                  <div
+                  key = {i}
+                  className = "flex flex-col justify-between gap-2 items-center text-xs font-semibold"
+                  >
+                    <p className = "whitespace-nowrap">
+                      {format(parseISO(d.dt_txt), "h:mm a")}
+                    </p>
+                    <WeatherIcon iconName = {d.weather[0].icon} />
+                    <p>
+                      {convertKelvinToCelsius(d?.main.temp ?? 0)}º
+                    </p>
+                  </div>
+                ))}
               </div>
             </Container>
             </div>
